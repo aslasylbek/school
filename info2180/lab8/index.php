@@ -1,10 +1,5 @@
 <?php
-$host = getenv('IP');
-$user = getenv('C9_USER');
-mysql_connect($host,"pigeonflight");
-mysql_select_db("world");
-
-
+require_once 'config.db.php';
 $LOOKUP = $_REQUEST['lookup'];
 
 # execute a SQL query on the database
