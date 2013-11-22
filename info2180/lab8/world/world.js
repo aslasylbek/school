@@ -1,6 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
-<d:error xmlns:d="DAV:" xmlns:a="http://ajax.org/2005/aml">
-    <a:exception>jsDAV_Exception_FileNotFound</a:exception>
-    <a:message>File at location /var/lib/stickshift/528cc91b5973cac38f000025/app-root/data/685842/world.js not found</a:message>
-<a:jsdav-version>0.2.6</a:jsdav-version>
-</d:error>
+window.onload = function(){
+   getData();
+    
+}
+
+function getData(){
+    $('lookup').observe('click', function(){ 
+	var term = $("term").getValue(); 
+     new Ajax.Request("world.php", {
+               method : 'get',
+			   parameters : {lookup : term},
+               onSuccess: function(transport) {
+                var response = transport.responseText || "no response text";
+                   $('result').update(response);
+              },
+              onFailure: function() { alert('Something went wrong...'); }         
+     }); 
+   });
+
+}
