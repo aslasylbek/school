@@ -1,0 +1,97 @@
+/* CSS Document */
+
+#sider{
+	width: 350px;
+	background: rgba(0,0,0,.6) url(../../../data/img/realestajpg.jpg);
+	background-size: cover;	
+	position: fixed;
+}
+
+#main{
+	position: absolute;
+	left: 350px;
+}
+
+#main > *{
+	margin: auto 20px;
+	width: 900px;
+}
+
+#head{
+	margin-top: 30px;
+	width: 500px;	
+}
+
+#head ul{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#head ul li{
+	cursor: pointer;
+	display: inline-block;
+	padding: 5px;		
+	border-bottom: 2px solid rgba(204,204,204,1);
+	color: rgba(102,102,102,1);
+}
+
+#head ul li:hover{
+	color: blue;	
+	border-color:  blue;
+}
+
+#head ul li.active{
+	border: none;
+	color: black;
+	font-weight: bold;
+}
+
+#head ul li.active:hover{
+	color: rgba(255,0,0,1);	
+}
+
+
+article.post{
+	position: relative;
+	padding-bottom: 30px;
+	border-bottom: 1px solid rgba(204,204,204,1);
+	cursor: pointer;
+}
+
+article.post .propimg{
+	width: 200px;
+	float: left;
+	margin-right: 10px;
+}
+
+article.post h1 address{
+  font-size:24px;	
+}
+
+article.post .cost {
+	position: absolute;
+	font-weight: bold;
+	right: 0;
+	top: 0;	
+}
+
+article.post .options{
+	clear: both;
+	position: absolute; bottom: 10px;
+	right: 0;	
+}
+
+article.post .options input[type="button"]{
+	outline: none;
+	border: none;
+	background:rgba(0,0,255,1);
+	box-shadow: 0 0 5px black;
+	color: white;
+	font-weight: bold;
+	padding: 5px 10px;
+	cursor: pointer;
+}
+
+
+
