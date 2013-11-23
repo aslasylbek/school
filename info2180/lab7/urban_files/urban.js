@@ -4,9 +4,9 @@ window.onload = function(){
 }
 
 function getData(){
-    var def_holder = $$("#result");
-    var searchf = $$("#term");
-    $('lookup').observe('click', function(){  
+    $('lookup').observe('click', function(){ 
+    var def_holder = $("result");
+    var searchf = $("term"); 
      new Ajax.Request("request.php", {
                method : 'get',
                parameters : {term : $("term").getValue(), all: true},

@@ -3,13 +3,19 @@
 $term = (!empty($_REQUEST['term']))? $_REQUEST['term']: '';
 $all = (!empty($_REQUEST['all']))? $_REQUEST['all'] : '';
 $author = (!empty($_REQUEST['author']))? $_REQUEST['author']: '';
-//$handle = fopen("https://webster.cs.washington.edu/cse154/labs/ajax/urban.php?term=$term&all=$all&author=$author", "rb");
-$handle = fopen("http://localhost/info2180/lab7/hm.php", "rb");
-$contents = stream_get_contents($handle);
-if(!empty($contents)){
-	print $contents;
-}else{
-	echo 'resource center is not available';	
+$source = "https://webster.cs.washington.edu/cse154/labs/ajax/urban.php?term=$term&all=$all&author=$author";
+if(!file_exists($source)){
+	$source = "alternative_source.php";
+	if(!file_exists($source)){
+		$source = false;	
+	}
 }
-fclose($handle);
+if($source != false){
+	$handle = fopen($source, "rb");
+	$contents = stream_get_contents($handle);
+	print $contents;
+	fclose($handle);
+}else{
+	echo 'resource center is not available';
+}
 ?>
