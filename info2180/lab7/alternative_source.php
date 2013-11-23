@@ -35,3 +35,15 @@
  </entry>
 
 </entries>
+
+<words author="silly_walk">
+
+ <word entry="ATM" defid="825904 "/>
+
+ <word entry="moog" defid="815030 "/>
+
+ <word entry="OMC" defid="1012620 "/>
+
+ <word entry="OFC" defid="1012612 "/>
+
+</words>
