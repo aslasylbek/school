@@ -1,19 +1,3 @@
-<?php
-$host = getenv('IP');
-$user = getenv('C9_USER');
-mysql_connect($host,"pigeonflight");
-mysql_select_db("world");
-
-
-$LOOKUP = $_REQUEST['lookup'];
-
-# execute a SQL query on the database
-$results = mysql_query("SELECT * FROM countries WHERE name LIKE '%$LOOKUP%';");
-print $results;
-# loop through each country
-while ($row = mysql_fetch_array($results)) {
-  ?>
-  <li> <?php echo $row["name"]; ?>, ruled by <?php echo $row["head_of_state"]; ?> </li>
-  <?php
-}
-?>
+<h1>Info2180 folder</h1>
+<a href="info2180/lab7">For lab 7, click me</a>
+<a href="info2180/lab8">For lab 8, click me</a> 

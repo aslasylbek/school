@@ -5,7 +5,7 @@ if(!empty($_REQUEST['lookup'])){
 	
 	# execute a SQL query on the database
 	$results = mysql_query("SELECT * FROM countries WHERE name LIKE '%$LOOKUP%';");
-	print $results;
+	print $results.' ';
 	# loop through each country
 	while ($row = mysql_fetch_array($results)) {
 	  ?>
