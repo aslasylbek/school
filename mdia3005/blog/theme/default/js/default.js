@@ -40,13 +40,23 @@ function sectionResize(){
 
 
 var topro = function(goto) {
-	location.assign("http://www.w3schools.com");
+	//location.assign("http://www.w3schools.com");
 };
 
 $(window).on("resize load", window, function(){
 	//resize wiindow 
 	sectionResize();
 });
+
+function create_comment(postid){	
+	var text = $('#'+postid+' .fmessage').val();
+	var dt = new Date();
+	var dta = ''+ dt.getTime();
+	var primg = $('#heaa #postada');
+	var prnam = $('#heaa #postbyad');
+	var cjson = {'date':dta, 'country':countr, 'postid':postid, 'user':{'username': ''+prnam.html(), 'userimg':''+primg.html()}, 'message': text};
+	$.post('module/comment/add.php', cjson, function(data){$('#'+postid+'1.ucom').append(data); cal_datepost();});
+}
 
 
 

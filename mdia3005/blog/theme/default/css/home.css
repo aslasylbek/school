@@ -57,12 +57,23 @@ article.post{
 	padding-bottom: 30px;
 	border-bottom: 1px solid rgba(204,204,204,1);
 	cursor: pointer;
+	padding: 20px 0 40px 0;
 }
 
 article.post .propimg{
 	width: 200px;
-	float: left;
 	margin-right: 10px;
+	display: inline-block;
+}
+
+article.post .cholder{
+	display: inline-block;
+	width: 75%;
+	vertical-align: top;
+}
+
+article.post .head {
+margin-top: 0;
 }
 
 article.post h1 address{
@@ -73,25 +84,49 @@ article.post .cost {
 	position: absolute;
 	font-weight: bold;
 	right: 0;
-	top: 0;	
+	top: 20px;	
 }
 
 article.post .options{
-	clear: both;
-	position: absolute; bottom: 10px;
-	right: 0;	
+	position: relative;
 }
 
-article.post .options input[type="button"]{
+article.post .commentf{
+	display: none;
+}
+
+article.post .commentf .fmessage{
+	width: 100%;
+	height: 50px;
+}
+
+article.post .options input[type="submit"]{
 	outline: none;
 	border: none;
+	background:url(../../../static/pic/com.png) no-repeat;
+	background-size: contain;
+	background-origin:border-box;
+	width: 100px;
+	background-position: 70px center;
+	color: rgba(153,153,153,1);
+	
+	/*
 	background:rgba(0,0,255,1);
 	box-shadow: 0 0 5px black;
-	color: white;
+	*/
 	font-weight: bold;
-	padding: 5px 10px;
 	cursor: pointer;
+	text-align: left;
+	position: absolute;
+	right: 0;
 }
 
-
+article.post .options input.share{
+	background: #09f;
+	box-shadow: 0 0 5px #777;	
+	color: white !important;
+	text-transform:uppercase;
+	padding: 5px;
+	text-align: center;
+}
 
