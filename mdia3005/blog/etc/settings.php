@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once("mysql_functions.lib.php");
 
 //set host 

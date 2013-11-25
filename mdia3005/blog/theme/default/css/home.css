@@ -100,14 +100,14 @@ article.post .commentf .fmessage{
 	height: 50px;
 }
 
-article.post .options input[type="submit"]{
+article.post .options input[type="submit"], article.post .options input[type="button"] {
 	outline: none;
 	border: none;
 	background:url(../../../static/pic/com.png) no-repeat;
 	background-size: contain;
 	background-origin:border-box;
-	width: 100px;
-	background-position: 70px center;
+	width: 130px;
+	background-position: right;
 	color: rgba(153,153,153,1);
 	
 	/*
@@ -120,6 +120,38 @@ article.post .options input[type="submit"]{
 	position: absolute;
 	right: 0;
 }
+
+article.post a{
+	color: #999;
+	text-decoration:underline;	
+}
+
+article.post [id^='ucom']{
+	padding: 10px 0;	
+}
+
+article.post [id^='ucom'] .ptime {
+position: absolute;
+right: 0;
+color: #999;
+}
+
+article.post .commenters h3{
+	margin: 5px auto;	
+}
+
+article.post .commenters .profile_link .profile_pic{
+	width: 30px;
+	float: left;
+	margin-right: 10px;
+	border-radius: 10px;
+	box-shadow: 0 0 5px #444;
+}
+
+article.post .commenters .message{
+	margin-left: 40px;	
+}
+
 
 article.post .options input.share{
 	background: #09f;

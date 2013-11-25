@@ -1,7 +1,6 @@
 // JavaScript Document
-$.post("module/blog/get_blog.php", {"amt": 10},function(data){
-		$(con_cont).prepend(data);
-		
+$.post("module/blog/get_blog.php", {"amt": 10},function(data){			
+	$(con_cont).prepend(data);				
 });
 
 fetchData();
@@ -40,12 +39,19 @@ function comment(pid){
 	var message = $('#comm_'+pid+' .fmessage').val();
 	if(pform.css('display') == 'none'){	
 		pform.show();
-		$('#'+pid+' input.comment').addClass('share');
-	}else{		
-		$('#'+pid+' input.comment').attr('form', 'comm_'+pid);
+		$('#'+pid+' input[type="button"].comment').val('hide comments');
+		$.post('module/blog/get_comment.php', {'pid':pid, 'amt': 10}, function(data){										
+				$('#ucom_'+pid).append(data);		
+				cal_datepost();			
+			}); 
+	}else{		 
 		pform.submit(function(e) {
-			$.post('module/blog/add_comment.php', {'pid':pid, 'uid':'oshane','comment': message}, function(data){alert(data);});     
+			$.post('module/blog/add_comment.php', {'pid':pid, 'uid':'oshane','comment': message}, function(data){										
+				$('#ucom_'+pid).append(data);		
+				cal_datepost();		
+			});     
 			return false;   
 		});
 	}
+	
 }

@@ -1,10 +1,59 @@
 /* CSS Document */
+
 body{
 	margin: 0; 
 	padding: 0;	
 	position: relative;
 	overflow-x: hidden;
 }
+
+body:before{
+	content: '';
+	display: block;
+	border-top: 5px solid #333;
+	width: 100%;
+	position: fixed;
+	z-index: 999;
+	top: 0;
+	right: 0;
+}
+
+#userwel{
+	background: #333;
+	position: fixed;
+	top: 0;
+	right: 10px;
+	heigjt: 200px;
+	z-index: 999;
+	color: white;
+	padding: 5px 20px;
+	border-radius: 0 0 10px 10px;
+}
+
+#userwel a{
+	color: white;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+input{	
+	border: none;
+	outline: none;
+}
+
+a{
+	color: white;
+	text-decoration: none;
+}
+
+li{
+	cursor: pointer;
+}
+
+input:not([type="submit"]):not([type="button"]){
+	box-shadow: 0 0 10px black inset;
+}
+
 #menu{
 	background: #333;
 	color: white;
@@ -14,7 +63,7 @@ body{
 	font-weight: bold;
 	font-size: 18px;
 	position: fixed;
-	top: 5px;
+	top: 25px;
 	left: 3px;
 	border-radius: 0 5px 5px 0;
 	z-index: 1000;
@@ -27,11 +76,95 @@ body{
 	top: 0;
 }
 
+#accform{
+	background: #333;
+	position: absolute;
+	top: 0; left: -300px;
+	display: none;
+	padding: 10px 20px;
+}
+
+#accform input{
+	display: block;
+	margin-bottom: 10px;
+	padding: 5px 10px;
+}
+
+#accform input[type="submit"]{
+	color: white;
+	text-transform: uppercase;
+	padding: 5px 10px;	
+	font-weight: bolder;
+	text-shadow: 0 0 5px white;
+}
+
+#accform input:not([type="submit"]){
+	width: 250px;	
+}
+
+#accform input:focus{
+	background: white;
+}
+
 #menu_items{
 	width: 300px;
 	left: -295px;
 	background: #333;
 	z-index: 999;
+}
+
+#menu_items ul{
+	color: white;
+}
+
+#menu_items ul li ul{
+	padding-left: 20px;
+}
+
+#menu_items ul li:hover ul{
+	display: block;
+}
+
+#menu_items ul li ul li{
+	padding: 5px 20px;
+	font-size: 15px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+#menu_items ul li ul .signin{
+	background: #09f;
+	box-shadow: 0 0 5px white;
+}
+
+#menu_items ul li ul .register{
+	background: rgba(51,255,51,1);
+	box-shadow: 0 0 5px white;
+}
+
+#menu_items ul li{
+	list-style: none;
+}
+
+#menu_items ul li.logo{
+	font-size: xx-large;
+	text-shadow: 0 0 5px white;	
+}
+
+#menu_items footer{
+ position: absolute;
+ bottom: 0;
+}
+
+
+#menu_items footer ul li{
+	float: left;
+	display: inline-block;
+	padding-right: 10px 
+}
+
+#menu_items footer ul li a{
+	color: #999;
 }
 
 #holder{
