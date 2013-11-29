@@ -1,0 +1,32 @@
+/* CSS Document */
+body{
+	padding: 0;
+	margin: 0;	
+}
+div[role="main"]{
+}
+
+#canvas{
+	height: 500px;
+}	
+
+section[role="application"]{
+	width: 100%;	
+	margin: 0;
+	background: black;
+	position: absolute;
+	bottom: 0;	
+}
+
+#terminal{
+	padding: 10px;
+	width: 98%;
+	margin: 0 auto;
+	display:block;
+	outline: none;
+	background-color: #444;
+	outline: none;
+	border: none;
+	color: white;
+	box-shadow: 0 0 13px black inset;
+}
