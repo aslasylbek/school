@@ -6,3 +6,6 @@
 <h1>MDIA3005</h1>
 <a href="mdia3005/blog/">Blog</a>
 <a href="mdia3005/wordpress/">Wordpress</a>
+<h1>OS</h1>
+<h2>Animation</h2>
+<a href="os/animation/deadlock.html">Deadlock</a>
