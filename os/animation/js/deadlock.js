@@ -1,4 +1,5 @@
 var terminal = document.getElementById('terminal');
+var canvas = document.getElementById('canvas');
 window.onload = function(){
 	
 }
@@ -266,6 +267,7 @@ function Process(process_id){
     this.pid = process_id;
     this.running = false;
     this.resources = [];
+	this.cords = [];
 	this.nextCommand('Process '+this.pid+' was created');
     this.addResource = function(resource_id){
         this.resources.push(resource_id);
@@ -282,13 +284,29 @@ function Process(process_id){
 		var rid = this.resource.pop();
 		this.nextCommand('Resource '+rid+' was removed from process '+this.pid);
 	}       
+	
+	this.draw = function(){
+		var pr = document.createElement('div');
+		pr.setAttribute('id', this.pid);
+		pr.setAttribute('class', 'process');
+		pr.innerHTML = 'Process<br>'+this.pid;
+		this.cords[0] = Process.cords[0][0];
+		this.cords[1] = Process.cords[0][1];
+		pr.style.top = this.cords[1]+'px';
+		pr.style.left = this.cords[0]+'%';		
+		Process.cords.splice(0,1);
+		canvas.appendChild(pr);
+		this.nextLine('create process diagram');
+	}
+	this.draw();	
 }
 
 function Resource(resource_id){
 	this.unit = null;
 	this.rid = resource_id;
 	this.processes = [];	
-	this.nextCommand('Resource '+this.rid+' was created');
+	this.cords = [];
+	this.nextLine('Resource '+this.rid+' was created');
 	this.addProcess = function(process_id){
 		this.processes.push(process_id);
 	}
@@ -299,9 +317,25 @@ function Resource(resource_id){
 	this.removeLastProces = function(){
 		this.processes.pop();
 	}
-		
+	
+	this.draw = function(){
+		var re = document.createElement('div');
+		re.setAttribute('id', this.rid);
+		re.setAttribute('class', 'resource');
+		re.innerHTML = 'Reource<br>'+this.rid;
+		this.cords[0] = 45;
+		this.cords[1] = Resource.top[0];
+		re.style.left = this.cords[0]+'%';
+		re.style.top = this.cords[1]+'px';
+		Resource.top.splice(0,1);
+		canvas.appendChild(re);
+		this.nextLine('create resource diagram for '+this.rid);
+	}
+	this.draw();	
 }
 
+Resource.top = [50, 140, 230, 320, 410];
+Process.cords = [[15, 10], [15, 100], [15,190], [15,280], [15,370], [70, 10], [70, 100], [70,190], [70,280], [70,370]];
 
 //inherit commands class
 //only two functions are inherit becasue of the variable scope
