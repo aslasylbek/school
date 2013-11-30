@@ -9,19 +9,30 @@ var commands = new Commands();
 terminal.onkeypress = function(e){
 	if(e.keyCode == 13){
 		var val = (this.value.substr(this.value.lastIndexOf(">>") + 2)).trim();
-		commands.user.push(val);
+		commands.cacheCommand(val);
 		commands.execute(val);
-	}
+	}		
 }
 
+var temp = '';
+var tempCheck = 0;
 terminal.onkeyup = function(e){
+	//console.log(e.keyCode);
 	if(e.keyCode == 13){
 		this.value +='>> ';
+		tempCheck = 0;
+	}else if(e.keyCode == 40){
+		if(tempCheck == 0){
+			temp = this.value; tempCheck++;
+		}
+        var pvcmd = commands.previousCommand();
+		this.value = temp+''+(( pvcmd != false )? pvcmd: '');		
 	}
 }
 
 function Commands(){
-	this.user = [];
+	var cmduser = [];
+	var cmdp = 0;
 	var cmds = ["-c", "-l", "->", "-d", "-k", '-h'];
 	var processes = [];
 	var resources = [];	
@@ -50,14 +61,15 @@ function Commands(){
 							var rid = command.substr(command.indexOf('->') + 2);
 							var pid = command.substring(command.indexOf('process')+7, command.indexOf('->')).trim();
                             if(this.processExists(pid) && this.resourceExists(rid)){
-							     this.addProcessResource(pid,rid); 
-								 this.addResourceProcess(rid,pid);
+								this.addProcessToResourcce(pid, rid);
+								this.addResourceToProcess(rid, pid);
                             }
 						}else{
-							this.nextCommand("There are no resource available for use\n PLease create resource by using resource -c [resource_name]");	
+                            alert();
+							this.nextLine("There are no resource available for use\n PLease create resource by using resource -c [resource_name]");	
 						}
 					}else{
-						this.nextCommand("Invalid operation on resource");			
+						this.nextLine("Invalid operation on resource");			
 					}	
 					break;
 				case cmds.indexOf('-d'):				
@@ -81,24 +93,63 @@ function Commands(){
 							this.remove_resource(getName(command));
 						}
 					}
+					break;				
+				case cmds.indexOf('-h'):
+						this.help(getName(command));		
+					break;				
 				default:
-					this.nextCommand('No such command exist');			
+					this.nextLine('No such command exist');			
 			}
+		}else if(command.substr(0, 9).indexOf('help') != -1 ){
+			this.help('process');
+			this.help('resource');
+		}else{
+			this.nextLine('No such command exist');					
 		}
 	}
 			
-	this.nextCommand = function(message){
-		terminal.value += '\n>> '+message;		
+	this.nextCommandLine = function(message){
+		terminal.value += message+'\n>>';		
 	}
 	
 	this.nextLine = function(message){
-		terminal.value += '\n '+message;			
+		terminal.value += '\n'+message;			
 	}
 	
 	var validateCommand = function(command){
 		command = command.substr(command.indexOf('-'), 2);	
-		//console.log(cmds.indexOf(command));
 		return cmds.indexOf(command);			
+	}
+	
+	this.cacheCommand = function(command){
+		cmduser.push(command);
+		cmdp = cmduser.length;
+	}
+	
+	this.previousCommand = function(){
+		if(cmduser.length != 0){
+			if(cmdp !== 0){
+				return cmduser[(--cmdp)];	
+			}else{
+				cmdp = cmduser.length;
+				return cmduser[cmdp-1];
+			}		
+		}else{
+			return false;
+		}
+	}
+	
+	this.nextCommand = function(){
+		if(cmduser.length != 0){
+			if(cmdp + 1 != cmduser.length){
+				return cmduser[(++cmdp)];	
+			}else{
+				cmdp = 0;
+				return cmduser[cmdp];
+			}		
+		}else{
+			return false;
+		}
 	}
 	
 	var getName = function(command){		
@@ -106,12 +157,25 @@ function Commands(){
 		return name;	
 	}
 	
-	var getResource = function(resource){
-		if(resources.length != 0){
-		}else{
-			false;	
-		}
-	}
+	this.getResource = function(resource_id){
+        for(var x in resources){
+            if(resources[x].rid === resource_id){
+                return resources[x];   
+            }
+        }
+        this.nextLine('Resource '+resource_id+' does not exist');
+        return false;
+    }
+    
+    this.getProcess = function(process_id){
+		for(var x in processes){
+            if(processes[x].pid === process_id){
+                return processes[x];   
+            }
+        }
+        this.nextLine('Process '+process_id+' does not exist');
+        return false;
+    }
     
     this.resourceExists = function(resource_id){
         for(var x in resources){
@@ -119,7 +183,7 @@ function Commands(){
                 return true;   
             }
         }
-        this.nextCommand('Resource '+resource_id+' does not exist');
+        this.nextLine('Resource '+resource_id+' does not exist');
         return false;
     }
     
@@ -129,27 +193,40 @@ function Commands(){
                 return true;   
             }
         }
-        this.nextCommand('Process '+process_id+' does not exist');
+        this.nextLine('Process '+process_id+' does not exist');
         return false;
     }
 	
-	this.addProcessToResourcce = function(resource_id, process_id){		
+	this.addProcessToResourcce = function(process_id, resource_id){		
 		for(var x = 0; x < resources.length; x++){
 			if(resources[x].rid == resource_id){
 				resources[x].addProcess(process_id);	
 			}else{
-				this.nextCommand("There is no process of such nature\nYou can create a process by using process -c or create a resource by resource -c\nAfterwards you can link them together by doing process -r {process_id]->[resource_id]");				
+				this.nextLine("There is no process of such nature\nYou can create a process by using process -c or create a resource by resource -c\nAfterwards you can link them together by doing process -r {process_id]->[resource_id]");				
 			}
 		}
 	}
 	
-	this.addResourceToProcess = function(process_id, resource_id){
+	this.addResourceToProcess = function(resource_id, process_id){
 		for(var x = 0; x < processes.length; x++){
 			if(processes[x].pid == process_id){
 				processes[x].addResource(resource_id);	
 			}else{
-				this.nextCommand("There is no process of such nature\nYou can create a process by using process -c or create a resource by resource -c\nAfterwards you can link them together by doing process -r {process_id]->[resource_id]");				
+				this.nextLine("There is no process of such nature\nYou can create a process by using process -c or create a resource by resource -c\nAfterwards you can link them together by doing process -r {process_id]->[resource_id]");				
 			}
+		}
+	}
+	
+	this.drawArrow = function(process_id, resource_id){
+		var resource = this.getResource(resource_id);
+		var process = this.getProcess(process_id);		
+	}
+	
+	this.help = function(type){
+		if(type == 'resource'){
+			this.nextLine('To execute a command for a resource do resource [option] [process_name]. \nThe resource options are as followed \n-c \t create resource\n-l\t list all resource\n-d\t describe resource\n-k\t kill resource');			
+		}else if(type=='process'){
+			this.nextLine('To execute a command for a process do process [option] [process_name]. \nThe process options are as followed \n-c \t create process\n-l\t list all process\n-d\t describe process\n-k\t kill process\nThere is a special process function for requesting resource which is done by doing process [process_name]->[resource_name]');
 		}
 	}
 	
@@ -158,7 +235,7 @@ function Commands(){
 			if(processes[x].pid === process_id){
 				this.summary(process_id, 'process', processes[x].resources);	
 			}else if((x+1) == processes.lenght){
-				this.nextCommand("There is no process of such nature\nYou can create a process by using process -c or create a resource by resource -c\nAfterwards you can link them together by doing process -r {process_id]->[resource_id]");				
+				this.nextLine("There is no process of such nature\nYou can create a process by using process -c or create a resource by resource -c\nAfterwards you can link them together by doing process -r {process_id]->[resource_id]");				
 				break
 			}
 		}
@@ -207,23 +284,23 @@ function Commands(){
 	
 	this.list_processes = function(){
 		if(processes.length != 0){
-			this.nextCommand((processes.length > 1)? 'There are '+processes.length+' processes' : 'There is only '+processes.length+' process');
+			this.nextLine((processes.length > 1)? 'There are '+processes.length+' processes' : 'There is only '+processes.length+' process');
 			for(var x = 0; x < processes.length; x++){
 				this.nextLine('process '+processes[x].pid);
 			}
 		}else{
-			this.nextCommand('there are no process available');	
+			this.nextLine('there are no process available');	
 		}
 	}
 	
 	this.list_resources = function(){
 		if(resources.length != 0){
-			this.nextCommand((resources.length > 1)? 'There are '+resources.length+' resource' : 'There is only '+resources.length+' resource');
+			this.nextLine((resources.length > 1)? 'There are '+resources.length+' resource' : 'There is only '+resources.length+' resource');
 			for(var x = 0; x < resources.length; x++){
 				this.nextLine('resource '+resources[x].rid);
 			}
 		}else{
-			this.nextCommand('there are no resources available');	
+			this.nextLine('there are no resources available');	
 		}
 	}
 	
@@ -268,21 +345,21 @@ function Process(process_id){
     this.running = false;
     this.resources = [];
 	this.cords = [];
-	this.nextCommand('Process '+this.pid+' was created');
+	this.nextLine('Process '+this.pid+' was created');
     this.addResource = function(resource_id){
         this.resources.push(resource_id);
-		this.nextCommand('Process '+this.pid+' has requested resource '+resource_id);
+		this.nextLine('Process '+this.pid+' has requested resource '+resource_id);
     }
 	
 	this.removeResource = function(resource_id){
 		var index = resources.indexOf(resource_id);
 		this.resources.splice(index, 1);
-		this.nextCommand('Resource '+resource_id+' was removed from process '+this.pid);
+		this.nextLine('Resource '+resource_id+' was removed from process '+this.pid);
 	}
 	
 	this.removeLastResource = function(){
 		var rid = this.resource.pop();
-		this.nextCommand('Resource '+rid+' was removed from process '+this.pid);
+		this.nextLine('Resource '+rid+' was removed from process '+this.pid);
 	}       
 	
 	this.draw = function(){
