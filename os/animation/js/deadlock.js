@@ -49,7 +49,8 @@ function Commands(){
 							var rid = command.substr(command.indexOf('->') + 2);
 							var pid = command.substring(command.indexOf('process')+7, command.indexOf('->')).trim();
                             if(this.processExists(pid) && this.resourceExists(rid)){
-							     this.setProcessResource(pid,rid); 
+							     this.addProcessResource(pid,rid); 
+								 this.addResourceProcess(rid,pid);
                             }
 						}else{
 							this.nextCommand("There are no resource available for use\n PLease create resource by using resource -c [resource_name]");	
@@ -131,7 +132,17 @@ function Commands(){
         return false;
     }
 	
-	this.setProcessResource = function(process_id, resource_id){
+	this.addProcessToResourcce = function(resource_id, process_id){		
+		for(var x = 0; x < resources.length; x++){
+			if(resources[x].rid == resource_id){
+				resources[x].addProcess(process_id);	
+			}else{
+				this.nextCommand("There is no process of such nature\nYou can create a process by using process -c or create a resource by resource -c\nAfterwards you can link them together by doing process -r {process_id]->[resource_id]");				
+			}
+		}
+	}
+	
+	this.addResourceToProcess = function(process_id, resource_id){
 		for(var x = 0; x < processes.length; x++){
 			if(processes[x].pid == process_id){
 				processes[x].addResource(resource_id);	
@@ -157,22 +168,39 @@ function Commands(){
 			if(resources[x].rid === resource_id){
 				this.summary(resource_id, 'resource', resources[x].processes);	
 			}else if((x+1) == resources.lenght){
-				this.nextCommand("There is no process of such nature\nYou can create a process by using process -c or create a resource by resource -c\nAfterwards you can link them together by doing process -r {process_id]->[resource_id]");				
+				this.nextLine("There is no process of such nature\nYou can create a process by using process -c or create a resource by resource -c\nAfterwards you can link them together by doing process -r {process_id]->[resource_id]");				
 				break
 			}
 		}
 	}
 	
-	this.summary = function(id, type, links){		
-		if(links.length > 2 ){
-			this.nextCommand(type+' '+id+' is requesting '+links.length+' '+type+'s. They are:'); 
-		}else if(links.length == 1){
-			this.nextCommand(type+' '+id+' is requesting '+links.length+' '+type+'. They is:'); 
-		}
-		if(links.length > 0){		
-			for(var x in links){
-				this.nextLine(type+' '+links[x]);	
-			}	
+	this.summary = function(id, type, links){
+		if(type === 'resource'){
+			if(links.length > 2 ){
+				this.nextLine(''+type+' '+id+' has been requested by '+links.length+' processes. They are:'); 
+			}else if(links.length == 1){
+				this.nextLine(''+type+' '+id+' has been requested by '+links.length+' process. They is:'); 
+			}
+			if(links.length > 0){		
+				for(var x in links){
+					this.nextLine('process '+links[x]);	
+				}	
+			}else{
+				this.nextLine('There are no processes requesting this resources')
+			}
+		}else{
+			if(links.length > 2 ){
+				this.nextLine(''+type+' '+id+' is requesting '+links.length+' resources. They are:'); 
+			}else if(links.length == 1){
+				this.nextLine(''+type+' '+id+' is requesting '+links.length+' resource. They is:'); 
+			}
+			if(links.length > 0){		
+				for(var x in links){
+					this.nextLine('resource '+links[x]);	
+				}	
+			}else{
+				this.nextLine('There are no reesource been requested by this process')
+			}
 		}
 	}
 	
@@ -226,6 +254,7 @@ function Commands(){
 	this.kill_resource = function(resource_id){
 		for(var x = 0; x < resources.length; x++){
 			if(resources[x].rid === resource_id){
+				console.log(resource_id);
 				resources.splice(x,1);	
 				this.remove_resource(resource_id);
 			}
