@@ -36,6 +36,7 @@ function Commands(){
 	var cmds = ["-c", "-l", "->", "-d", "-k", '-h'];
 	var processes = [];
 	var resources = [];	
+    var arrows = [];
 	this.execute = function(command){
 		command = (command.toLowerCase()).trim();
 		var run = validateCommand(command);
@@ -233,10 +234,15 @@ function Commands(){
 			arrow.setAttribute('class', 'arrow');
             arrow.style.top = (ptop + (pheight/2))+'px';
 			arrow.style.left = (pleft+pwidth)+'px'
-			arrow.style.width = (rleft-pleft)+'px';
+			arrow.style.width = (rleft-(pleft+pwidth))+'px';
 			arrow.style.backgroundColor = 'blue';
+            var effect = new Animation();
+            var x = rleft - (pleft + pwidth);
+            var y = rtop - ptop;
+            var thea = Math.atan2(y,x)*(180/Math.PI);
+           // console.log(thea);  
+            effect.rotate(arrow, thea);
 			canvas.appendChild(arrow);
-			arrow.rotate(ptop-rtop);
         }
     }
 	
@@ -443,3 +449,31 @@ Process.cords = [[15, 10], [15, 100], [15,190], [15,280], [15,370], [70, 10], [7
 //the two functions are nextLine and nextCommand
 Process.prototype = new Commands();
 Resource.prototype = new Commands();
+
+function Animation(){    
+    var looper;
+    this.degrees = 0;
+    this.rotate = function(elem, degrees){
+        this.degrees = degrees;
+        if(navigator.userAgent.match("Chrome")){
+            elem.style.WebkitTransform = "rotate("+this.degrees+"deg)";
+        } else if(navigator.userAgent.match("Firefox")){
+            elem.style.MozTransform = "rotate("+this.degrees+"deg)";
+        } else if(navigator.userAgent.match("MSIE")){
+            elem.style.msTransform = "rotate("+this.degrees+"deg)";
+        } else if(navigator.userAgent.match("Opera")){
+            elem.style.OTransform = "rotate("+this.degrees+"deg)";
+        } else {
+            elem.style.transform = "rotate("+this.degrees+"deg)";
+        }
+    }   
+    
+    this.rotateAnimation = function(elem,speed){
+        this.rotate(elem, this.degrees);
+        looper = setTimeout('rotateAnimation(\''+elem+'\','+speed+')',speed);
+        degrees++;
+        if(degrees > 359){
+            degrees = 1;
+        }
+    }
+}
