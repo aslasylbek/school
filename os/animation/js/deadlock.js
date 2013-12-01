@@ -344,7 +344,14 @@ function Commands(){
 			if(resources[x].processes.indexOf(process_id) != -1){
 				resources[x].processes.splice(resources[x].processes.indexOf(process_id), 1);
 			}
-		}
+		}        
+        for(var x in arrows){
+            if(arrows[x].indexOf(process_id+'->') != -1 || arrows[x].indexOf('->'+process_id)){ 
+                console.log(arrows[x]);
+                canvas.removeChild(arrows[x]);   
+                arrows.splice(x,1);
+            }
+        }
 	}
 	
 	this.remove_resource = function(resource_id){
@@ -352,7 +359,14 @@ function Commands(){
 			if(processes[x].resources.indexOf(resource_id) != -1){
 				processes[x].resources.splice(processes[x].resources.indexOf(resource_id), 1);
 			}
-		}
+		}       
+        for(var x in arrows){
+            if(arrows[x].indexOf(resource_id+'->') != -1 || arrows[x].indexOf('->'+resource_id)){
+                console.log(arrows[x]);
+                canvas.removeChild(arrows[x]);
+                arrows.splice(x,1);   
+            }
+        }
 	}
 	
 	this.kill_resource = function(resource_id){
