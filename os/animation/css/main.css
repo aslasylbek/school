@@ -30,6 +30,12 @@ div[role="main"]{
 	border-radius: 100px;
 }
 
+#canvas .arrow{
+	display: inline-block;
+	position: absolute;
+	height: 10px;
+}
+
 section[role="application"]{
 	width: 100%;	
 	margin: 0;

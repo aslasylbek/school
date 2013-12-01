@@ -63,10 +63,10 @@ function Commands(){
                             if(this.processExists(pid) && this.resourceExists(rid)){
 								this.addProcessToResourcce(pid, rid);
 								this.addResourceToProcess(rid, pid);
+								this.mapProcessToResource(pid, rid);
                             }
 						}else{
-                            alert();
-							this.nextLine("There are no resource available for use\n PLease create resource by using resource -c [resource_name]");	
+							this.nextLine("There are no resource available for use\nPLease create resource by using resource -c [resource_name]");	
 						}
 					}else{
 						this.nextLine("Invalid operation on resource");			
@@ -83,14 +83,14 @@ function Commands(){
 						}
 					}	
 					break;
-				case cmds.indexOf('-k'):					
+				case cmds.indexOf('-k'):	
 					if(command.substr(0, 9).indexOf('process') != -1){						
 						if(this.processExists(getName(command))){
 							this.kill_process(getName(command));
 						}
 					}else{
 						if(this.resourceExists(getName(command))){
-							this.remove_resource(getName(command));
+							this.kill_resource(getName(command));
 						}
 					}
 					break;				
@@ -118,6 +118,7 @@ function Commands(){
 	
 	var validateCommand = function(command){
 		command = command.substr(command.indexOf('-'), 2);	
+        console.log(command);
 		return cmds.indexOf(command);			
 	}
 	
@@ -163,7 +164,7 @@ function Commands(){
                 return resources[x];   
             }
         }
-        this.nextLine('Resource '+resource_id+' does not exist');
+        this.nextLine('Resource '+resource_id+' does not exist\nYou can create a process by using resource -c [resource_name]');
         return false;
     }
     
@@ -173,7 +174,7 @@ function Commands(){
                 return processes[x];   
             }
         }
-        this.nextLine('Process '+process_id+' does not exist');
+        this.nextLine('Process '+process_id+' does not exist\nYou can create a process by using process -c [process_name]');
         return false;
     }
     
@@ -183,7 +184,7 @@ function Commands(){
                 return true;   
             }
         }
-        this.nextLine('Resource '+resource_id+' does not exist');
+        this.nextLine('Resource '+resource_id+' does not exist\nYou can create a process by using resource -c [resource_name]');
         return false;
     }
     
@@ -198,29 +199,47 @@ function Commands(){
     }
 	
 	this.addProcessToResourcce = function(process_id, resource_id){		
-		for(var x = 0; x < resources.length; x++){
-			if(resources[x].rid == resource_id){
-				resources[x].addProcess(process_id);	
-			}else{
-				this.nextLine("There is no process of such nature\nYou can create a process by using process -c or create a resource by resource -c\nAfterwards you can link them together by doing process -r {process_id]->[resource_id]");				
-			}
-		}
+        var resource = this.getResource(resource_id);
+        if(resource != false){
+            resource.addProcess(process_id);	
+        }else{
+            this.nextLine("\nAfterwards you can link them together by doing process -r {process_id]->[resource_id]");				
+        }
 	}
 	
-	this.addResourceToProcess = function(resource_id, process_id){
-		for(var x = 0; x < processes.length; x++){
-			if(processes[x].pid == process_id){
-				processes[x].addResource(resource_id);	
-			}else{
-				this.nextLine("There is no process of such nature\nYou can create a process by using process -c or create a resource by resource -c\nAfterwards you can link them together by doing process -r {process_id]->[resource_id]");				
-			}
-		}
+	this.addResourceToProcess = function(resource_id, process_id){	
+        var process = this.getProcess(process_id);
+        if(process != false){
+            process.addResource(resource_id);	
+        }else{
+            this.nextLine("\nAfterwards you can link them together by doing process -r {process_id]->[resource_id]");				
+        }
 	}
-	
-	this.drawArrow = function(process_id, resource_id){
+    
+    this.mapProcessToResource = function(process_id, resource_id){        
 		var resource = this.getResource(resource_id);
-		var process = this.getProcess(process_id);		
-	}
+		var process = this.getProcess(process_id);	           
+        if(resource != false && process != false){
+            var rtop = resource.div.offsetTop;   
+            var rleft = resource.div.offsetLeft;
+            var rheight = resource.div.offsetHeight;
+            var rwidth = resource.div.offsetWidth;
+            var ptop = process.div.offsetTop;   
+            var pleft = process.div.offsetLeft;
+            var pheight = process.div.offsetHeight;
+            var pwidth = process.div.offsetWidth;
+            var arrow = document.createElement('div');
+            arrow.setAttribute('id', process_id+'->'+resource_id);
+			arrow.setAttribute('class', 'arrow');
+            arrow.style.top = (ptop + (pheight/2))+'px';
+			arrow.style.left = (pleft+pwidth)+'px'
+			arrow.style.width = (rleft-pleft)+'px';
+			arrow.style.backgroundColor = 'blue';
+			canvas.appendChild(arrow);
+			arrow.rotate(ptop-rtop);
+        }
+    }
+	
 	
 	this.help = function(type){
 		if(type == 'resource'){
@@ -307,6 +326,7 @@ function Commands(){
 	this.kill_process = function(process_id){
 		for(var x = 0; x < processes.length; x++){
 			if(processes[x].pid === process_id){
+                canvas.removeChild(processes[x].div);
 				processes.splice(x,1);	
 				this.remove_process(process_id);
 			}
@@ -332,7 +352,7 @@ function Commands(){
 	this.kill_resource = function(resource_id){
 		for(var x = 0; x < resources.length; x++){
 			if(resources[x].rid === resource_id){
-				console.log(resource_id);
+                canvas.removeChild(resources[x].div);
 				resources.splice(x,1);	
 				this.remove_resource(resource_id);
 			}
@@ -341,6 +361,7 @@ function Commands(){
 }
 
 function Process(process_id){
+	this.div = false;
     this.pid = process_id;
     this.running = false;
     this.resources = [];
@@ -373,12 +394,14 @@ function Process(process_id){
 		pr.style.left = this.cords[0]+'%';		
 		Process.cords.splice(0,1);
 		canvas.appendChild(pr);
+		this.div = pr;
 		this.nextLine('create process diagram');
 	}
 	this.draw();	
 }
 
 function Resource(resource_id){
+	this.div = false;
 	this.unit = null;
 	this.rid = resource_id;
 	this.processes = [];	
@@ -406,6 +429,7 @@ function Resource(resource_id){
 		re.style.top = this.cords[1]+'px';
 		Resource.top.splice(0,1);
 		canvas.appendChild(re);
+		this.div = re;
 		this.nextLine('create resource diagram for '+this.rid);
 	}
 	this.draw();	
