@@ -8,7 +8,7 @@ function getData(){
 	var term = $("term").getValue(); 
      new Ajax.Request("world.php", {
                method : 'get',
-			   parameters : {lookup : term},
+			   parameters : {lookup : term, all: true},
                onSuccess: function(transport) {
                 var response = transport.responseText || "no response text";
                    $('result').update(response);
