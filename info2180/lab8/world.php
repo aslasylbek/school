@@ -21,8 +21,8 @@ if(!empty($_REQUEST['lookup']) || (!empty($_REQUEST['all']) && $_REQUEST['all'] 
         while ($row = mysql_fetch_array($results)) {
         $country = $xml->createElement('country');
         $country = $countries->appendChild($country);
-        $name = $xml->createElement('name', $row["name"]);
-        $ruler = $xml->createElement('ruler', $row["head_of_state"]);
+        $name = $xml->createElement('name',  htmlspecialchars($row["name"]));
+        $ruler = $xml->createElement('ruler', htmlspecialchars($row["head_of_state"]));
         $name = $country->appendChild($name);
         $ruler = $country->appendChild($ruler);
         }
