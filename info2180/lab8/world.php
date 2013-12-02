@@ -13,15 +13,22 @@ if(!empty($_REQUEST['lookup']) || (!empty($_REQUEST['all']) && $_REQUEST['all'] 
           <?php
         }
     }else{
-    $xml = array('<countrydata>');     
+        //Set the content-type header to xml
+        header("Content-type: text/xml");
+        $xml = new DomDocument('1.0', "UTF-8");
+        $countries = $xml->createElement('countrydata');
+        $countries = $xml->appendChild($countries);
         while ($row = mysql_fetch_array($results)) {
-            array_push($xml, "<country><name>".$row["name"]."</name><ruler>".$row["head_of_state"]."</ruler></country>");
+        $country = $xml->createElement('country');
+        $country = $countries->appendChild($country);
+        $name = $xml->createElement('name', $row["name"]);
+        $ruler = $xml->createElement('ruler', $row["head_of_state"]);
+        $name = $country->appendChild($name);
+        $ruler = $country->appendChild($ruler);
         }
-        array_push($xml, '</countrydata>');
+        $string_value = $xml->saveXML();
+        echo $string_value;
     }
-    //Set the content-type header to xml
-    header("Content-type: text/xml");
-    echo implode('',$xml);
 }else{
 	echo "Not Found";
 }
