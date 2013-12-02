@@ -13,22 +13,15 @@ if(!empty($_REQUEST['lookup']) || (!empty($_REQUEST['all']) && $_REQUEST['all'] 
           <?php
         }
     }else{
+    $xml = array('<countrydata>');     
+        while ($row = mysql_fetch_array($results)) {
+            array_push($xml, "<country><name>".$row["name"]."</name><ruler>".$row["head_of_state"]."</ruler></country>");
+        }
+        array_push($xml, '</countrydata>');
+    }
     //Set the content-type header to xml
     header("Content-type: text/xml");
-        ?>
-    <countrydata>        
-        <?php
-        while ($row = mysql_fetch_array($results)) {
-          ?>
-          <country>
-              <name><?php echo $row["name"]; ?></name>
-              <ruler><?php echo $row["head_of_state"]; ?></ruler>
-            </country>
-          <?php
-        }
-        ?>
-    </countrydata>
-    <?php }
+    echo implode('',$xml);
 }else{
 	echo "Not Found";
 }
